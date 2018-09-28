@@ -1,21 +1,22 @@
 module.exports = function check(str, bracketsConfig) {
-	var openBrackets = [],
+	let openBrackets = [],
 		closeBrackets = [],
 		stack = []
-	for(var i in bracketsConfig)
+
+
+	bracketsConfig.forEach((bracket,i,array)=>{
+		openBrackets.push(bracket[0])
+		closeBrackets.push(bracket[1])
+	})
+
+	for(let symbol of str)
 	{
-		openBrackets[openBrackets.length] = bracketsConfig[i][0]
-		closeBrackets[closeBrackets.length] = bracketsConfig[i][1]
-	}
-	for(var symbol of str)
-	{
-		
-		var openIndex =  openBrackets.indexOf(symbol)
-		var closeIndex =  closeBrackets.indexOf(symbol)
+		let openIndex =  openBrackets.indexOf(symbol)
+		let closeIndex =  closeBrackets.indexOf(symbol)
 
 		if(stack.length > 0) // если мы ожидаем какую-то скобку
 		{
-			var needleSymbol = stack.pop()
+			let needleSymbol = stack.pop()
 			if(needleSymbol == symbol) //если это ожидаемая скобка, вынимаем из стека и идем дальше
 			{
 				continue;
@@ -25,11 +26,12 @@ module.exports = function check(str, bracketsConfig) {
 				stack.push(needleSymbol)
 			}
 		}
+		
 		if(openIndex > -1) //если это новая скобка, добавляем ее в стек
 		{
 			stack.push(closeBrackets[openIndex])
 		}
-		else	//если это левый символ, выходим
+		else	//если это некорректный символ, выходим
 		{
 			return false
 		}
